@@ -12,10 +12,12 @@ docker run -it --rm --name \
     -e APP_S3_BUCKET=uploads \
     -e APP_S3_ENDPOINT=http://localhost:9000 \
     -e APP_S3_ACL=public-read \
-    s3-proxy p1hub/s3-proxy:latest proxy -c configs/local.yaml -b :8080
+    p1hub/s3-proxy:latest proxy -c configs/local.yaml -b :8080
 ```  
-This command up container with daemon on 8080 and usage config files from container build (see `resources/configs/local.yaml`) 
+This command up container with daemon on 8080 port and usage config files from container build (see `resources/configs/local.yaml`), 
 for customize config just copy from this repository and mount file via `-v` option. 
+
+*Open API* specification you can found here `spec/openapi.yaml`, use [Swagger UI](https://swagger.io/tools/swagger-ui/) to read and try it!
 
 ## Environment variables
 
@@ -59,3 +61,9 @@ for customize config just copy from this repository and mount file via `-v` opti
 Please feel free to submit issues, fork the repository and send pull requests!
 
 When submitting an issue, we ask that you please include a complete test function that demonstrates the issue. Extra credit for those using Testify to write the test code that demonstrates it.
+
+## TODO
+* Health check
+* Tests (Travis)
+* Build Docker image
+* ACL (JWT)

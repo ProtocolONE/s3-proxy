@@ -1,0 +1,59 @@
+openapi: 3.0.0
+info:
+  description: This is an API for uploading files to S3 as proxy
+  version: 1.0.0
+  title: S3 Proxy
+  termsOfService: ''
+  contact:
+    email: ilya.krasheninnikov@protocol.one
+    name: Ilya Krasheninnikov
+    url: 'https://protocol.one'
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: Proxy
+    description: S3 Proxy Daemon
+paths:
+  /upload:
+    post:
+      tags:
+        - Proxy
+      summary: Upload file to underlying S3 server
+      operationId: addLanding
+      description: Adds a landing for user
+      responses:
+        '201':
+          description: File uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Uploaded'
+        '400':
+          description: Bad Request
+        '413':
+          description: Payload Too Large
+        '415':
+          description: Unsupported Media Type
+        '422':
+          description: Unprocessable Entity
+        '500':
+          description: Server Internal Error
+      requestBody:
+        description: File to uploading
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+components:
+  schemas:
+    Uploaded:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name

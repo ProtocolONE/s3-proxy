@@ -30,7 +30,7 @@ func (s *S3Proxy) Use(router *chi.Mux) {
 
 // Routers
 func (s *S3Proxy) Routers(router *chi.Mux) {
-	router.Handle("/", http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+	router.Post("/upload", http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 		id, err := uuid.NewRandom()
 		if err != nil {
 			s.L().Error("upload failed on generate UUID, error: %v", logger.Args(err))
