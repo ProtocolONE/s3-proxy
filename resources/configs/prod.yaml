@@ -1,0 +1,42 @@
+metric:
+  disabled: true
+tracing:
+  disabled: true
+proxy:
+  maxMemorySize: 10 mib
+  defaults:
+    allowAnyMimeType: false
+    maxUploadSize: 1 mib
+    folder: /uploads/other
+  groups:
+    video:
+      mimeTypes:
+        - video/webp
+        - video/mp4
+      maxUploadSize: 50 mib
+      folder: /uploads/video
+    other:
+      mimeTypes:
+        - application/json
+        - application/vnd.ms-fontobject
+        - application/font-woff2
+        - application/font-woff
+        - application/x-font-truetype
+      maxUploadSize: 1 mib
+      folder: /uploads/other
+    image:
+      mimeTypes:
+        - image/jpeg
+        - image/png
+        - image/gif
+        - image/svg+xml
+      maxUploadSize: 5 mib
+      folder: /uploads/image
+s3:
+  accessKeyId:
+  secretAccessKey:
+  token:
+  region:
+  bucket: uploads
+  endpoint: http://localhost:9000
+  acl: public-read

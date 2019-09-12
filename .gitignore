@@ -1,0 +1,13 @@
+artifacts
+vendor
+
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+*.test
+*.out
+.idea/
+.tmp/

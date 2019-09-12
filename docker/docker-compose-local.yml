@@ -1,0 +1,27 @@
+version: '3.7'
+services:
+  s3-proxy-daemon:
+    container_name: s3-proxy-daemon
+    image: p1hub/s3-proxy:${TAG}
+    restart: always
+    ports:
+      - "8080:8080"
+    command: ["proxy","-c","configs/local.yaml","-b",":8080","-d"]
+    networks:
+      - default
+  s3-minio:
+    container_name: s3-minio
+    ports:
+      - "9000:9000"
+    volumes:
+      - minio:/data
+    command: ["--compat","server","/data"]
+    environment:
+      - MINIO_ACCESS_KEY=AKIAIOSFODNN7EXAMPLE
+      - MINIO_SECRET_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+    networks:
+      default:
+        aliases:
+          - uploads.s3-minio
+volumes:
+  minio:
