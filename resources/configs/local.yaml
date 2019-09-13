@@ -7,7 +7,7 @@ proxy:
   defaults:
     allowAnyMimeType: false
     maxUploadSize: 1 mib
-    folder: /uploads/other
+    folder: /other
   groups:
     video:
       mimeTypes:
@@ -23,7 +23,7 @@ proxy:
         - application/font-woff
         - application/x-font-truetype
       maxUploadSize: 1 mib
-      folder: /uploads/other
+      folder: /other
     image:
       mimeTypes:
         - image/jpeg
@@ -31,7 +31,7 @@ proxy:
         - image/gif
         - image/svg+xml
       maxUploadSize: 5 mib
-      folder: /uploads/image
+      folder: /image
 s3:
   accessKeyId: AKIAIOSFODNN7EXAMPLE
   secretAccessKey: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
