@@ -1,0 +1,50 @@
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+enableCertIssuer: true
+
+ingress:
+  hostname: ptahs3.tst.protocol.one
+  path: /
+  hostnamePrefix:
+
+certIssuer:
+  email: admin@protocol.one
+
+backend:
+  name: s3proxy
+  role: gobackend
+  image: "p1hub/s3-proxy"
+  imageTag: latest
+  port: 8080
+  ingressPort: 8080
+  healthPort: 8081
+  replicas: 1
+  service: 
+    type: ClusterIP
+    port: 8080
+    protocol: TCP
+  env:
+    - APP_S3_ACCESSKEYID
+    - APP_S3_SECRETACCESSKEY
+    - APP_S3_REGION
+    - APP_S3_BUCKET
+
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
