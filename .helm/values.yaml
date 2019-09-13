@@ -29,6 +29,7 @@ backend:
     - APP_S3_SECRETACCESSKEY
     - APP_S3_REGION
     - APP_S3_BUCKET
+    - APP_S3_ENDPOINT
 
 
 resources: {}
