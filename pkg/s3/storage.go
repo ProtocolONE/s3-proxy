@@ -146,10 +146,11 @@ func (s *S3) syncPipe(r io.Reader, n *int64, refError *string) (io.ReadSeeker, e
 // client
 func (s *S3) client() *s3.S3 {
 	sess := session.Must(session.NewSession(&aws.Config{
-		HTTPClient:  s.httpClient(),
-		Region:      aws.String(s.cfg.Region),
-		Credentials: credentials.NewStaticCredentials(s.cfg.AccessKeyId, s.cfg.SecretAccessKey, s.cfg.Token),
-		Endpoint:    aws.String(s.cfg.Endpoint),
+		HTTPClient:       s.httpClient(),
+		Region:           aws.String(s.cfg.Region),
+		Credentials:      credentials.NewStaticCredentials(s.cfg.AccessKeyId, s.cfg.SecretAccessKey, s.cfg.Token),
+		Endpoint:         aws.String(s.cfg.Endpoint),
+		S3ForcePathStyle: aws.Bool(s.cfg.S3ForcePathStyle),
 	}))
 	return s3.New(sess)
 }
@@ -182,6 +183,7 @@ type Config struct {
 	Bucket             string
 	Endpoint           string
 	InsecureSkipVerify bool
+	S3ForcePathStyle   bool `default:"true"`
 	ACL                string
 	invoker            *invoker.Invoker
 }

@@ -10,6 +10,7 @@ info:
     url: 'https://protocol.one'
 servers:
   - url: http://localhost:8080
+  - url: https://ptahs3.tst.protocol.one
 tags:
   - name: Proxy
     description: S3 Proxy Daemon

@@ -20,8 +20,6 @@ services:
       - MINIO_ACCESS_KEY=AKIAIOSFODNN7EXAMPLE
       - MINIO_SECRET_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
     networks:
-      default:
-        aliases:
-          - uploads.s3-minio
+      - default
 volumes:
   minio:
