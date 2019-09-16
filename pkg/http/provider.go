@@ -37,7 +37,7 @@ func Mux(routers Routers, cfg *Config) (*chi.Mux, func(), error) {
 		return mux, func() {}, nil
 	}
 	mux = chi.NewRouter()
-	if cfg.Debug {
+	if cfg.Debug || len(cfg.Cors.Allowed) == 0 {
 		mux.Use(cors.AllowAll().Handler)
 	} else {
 		m := cors.New(cors.Options{
