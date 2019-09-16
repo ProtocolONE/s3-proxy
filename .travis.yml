@@ -14,7 +14,7 @@ jobs:
     install: true
     script:
     - echo "tests here"
-    - sonar-scanner
+    #- sonar-scanner
   - stage: deploy
     services: docker
     install: true
