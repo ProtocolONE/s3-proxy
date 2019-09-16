@@ -9,6 +9,8 @@ CACHE_TAG ?= unknown_cache
 GOOS ?= linux
 GOARCH ?= amd64
 CGO_ENABLED ?= 0
+DIND_UID ?= 0
+DING_GUID ?= 0
 
 define build_resources
  	find "$(ROOT_DIR)/resources" -maxdepth 1 -mindepth 1 -exec cp -R -f {} $(ROOT_DIR)/artifacts/${1} \;
@@ -22,8 +24,9 @@ define go_docker
 		-w /${ROOT_DIR} \
 		-e GOPATH=/$${GO_PATH}:/go \
 		$${GO_IMAGE}:$${GO_IMAGE_TAG} \
-		sh -c 'GOOS=${GOOS} GOARCH=${GOARCH} CGO_ENABLED=${CGO_ENABLED} TAG=${TAG} $(subst ",,${1})'
+		sh -c 'GOOS=${GOOS} GOARCH=${GOARCH} CGO_ENABLED=${CGO_ENABLED} TAG=${TAG} $(subst ",,${1}); if [ "${DIND_UID}" != "0" ]; then chown -R ${DIND_UID}:${DIND_GUID} ${ROOT_DIR}; fi'
 endef
+
 
 up: ## initialize required tools
 	. ${ROOT_DIR}/scripts/common.sh ${ROOT_DIR}/scripts ;\
