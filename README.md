@@ -31,6 +31,7 @@ for customize config just copy from this repository and mount file via `-v` opti
 | APP_S3_BUCKET                        | true     | -                       | The S3 bucket to be proxied with this app |
 | APP_S3_ENDPOINT                      | true     | -                       | The endpoint for S3 API                   |
 | APP_S3_ACL                           | true     | -                       | ACL mode for S3 request                   | 
+| APP_PROXY_BASEURL                    |          | -                       | Base URL path to fetch file               | 
 
 ## Development requirements
 * GoLang 1.12+

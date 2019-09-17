@@ -77,9 +77,10 @@ func (s *S3Proxy) Routers(router *chi.Mux) {
 			return
 		}
 		limFile := http.MaxBytesReader(rw, file, int64(group.MaxUploadSize))
-		fileName := id.String()+exts[0]
+		fileName := id.String() + exts[0]
+		keyS3Path := group.Folder + "/" + fileName
 		// Start uploading
-		if _, err := s.storage.Upload(s.ctx, group.Folder+"/"+fileName, limFile); err != nil {
+		if _, err := s.storage.Upload(s.ctx, keyS3Path, limFile); err != nil {
 			if err.Error() == "http: request body too large" {
 				http.Error(rw, "413 Payload Too Large", http.StatusRequestEntityTooLarge)
 				return
@@ -88,9 +89,11 @@ func (s *S3Proxy) Routers(router *chi.Mux) {
 			http.Error(rw, "500 Server Internal Error", http.StatusInternalServerError)
 			return
 		}
-
+		// OK Response
 		render.JSON(rw, r, map[string]string{
-			"file": fileName,
+			"file":          fileName,
+			"relative_path": "/" + keyS3Path,
+			"base_url":      s.cfg.BaseUrl,
 		})
 	}))
 }
@@ -142,6 +145,7 @@ type Defaults struct {
 // Config
 type Config struct {
 	Debug         bool `fallback:"shared.debug"`
+	BaseUrl       string
 	Middleware    []func(http.Handler) http.Handler
 	Groups        map[string]*Group
 	Defaults      Defaults
