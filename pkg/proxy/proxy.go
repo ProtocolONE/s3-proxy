@@ -92,7 +92,7 @@ func (s *S3Proxy) Routers(router *chi.Mux) {
 		// OK Response
 		render.JSON(rw, r, map[string]string{
 			"file":          fileName,
-			"relative_path": "/" + keyS3Path,
+			"relative_path": keyS3Path,
 			"base_url":      s.cfg.BaseUrl,
 		})
 	}))

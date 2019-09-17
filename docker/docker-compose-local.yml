@@ -7,6 +7,8 @@ services:
     ports:
       - "8080:8080"
     command: ["proxy","-c","configs/local.yaml","-b",":8080","-d"]
+    environment:
+      - APP_PROXY_BASEURL=http://s3-minio:9000/uploads
     networks:
       - default
   s3-minio:
