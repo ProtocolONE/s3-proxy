@@ -43,7 +43,11 @@ func (s *S3Proxy) Routers(router *chi.Mux) {
 		// Check on max length
 		r.Body = http.MaxBytesReader(rw, r.Body, s.maxBodySize)
 		if err := r.ParseMultipartForm(int64(s.cfg.MaxMemorySize)); err != nil {
-			http.Error(rw, "413 Payload Too Large", http.StatusRequestEntityTooLarge)
+			if err.Error() == "http: request body too large" {
+				http.Error(rw, "413 Payload Too Large", http.StatusRequestEntityTooLarge)
+				return
+			}
+			http.Error(rw, "400 Bad Request", http.StatusBadRequest)
 			return
 		}
 		// Get data from file multipart field
