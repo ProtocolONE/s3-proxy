@@ -11,10 +11,9 @@ proxy:
   groups:
     video:
       mimeTypes:
-        - video/webp
         - video/mp4
       maxUploadSize: 50 mib
-      folder: /uploads/video
+      folder: /video
     other:
       mimeTypes:
         - application/json
@@ -22,6 +21,9 @@ proxy:
         - application/font-woff2
         - application/font-woff
         - application/x-font-truetype
+        - font/woff
+        - font/woff2
+        - font/ttf
       maxUploadSize: 1 mib
       folder: /other
     image:
@@ -30,6 +32,7 @@ proxy:
         - image/png
         - image/gif
         - image/svg+xml
+        - image/webp
       maxUploadSize: 5 mib
       folder: /image
 s3:

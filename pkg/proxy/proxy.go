@@ -10,8 +10,10 @@ import (
 	"github.com/go-chi/render"
 	"github.com/google/uuid"
 	"github.com/thoas/go-funk"
+	"io"
 	"mime"
 	"net/http"
+	"path/filepath"
 )
 
 // S3Proxy
@@ -45,7 +47,7 @@ func (s *S3Proxy) Routers(router *chi.Mux) {
 			return
 		}
 		// Get data from file multipart field
-		file, _, err := r.FormFile(FormFile)
+		file, fileHeader, err := r.FormFile(FormFile)
 		if err != nil {
 			http.Error(rw, "400 Bad Request", http.StatusBadRequest)
 			return
@@ -54,7 +56,7 @@ func (s *S3Proxy) Routers(router *chi.Mux) {
 		// Detect mime type
 		header := make([]byte, 512)
 		_, err = file.ReadAt(header, 0)
-		if err != nil {
+		if err != nil && err != io.EOF {
 			log.Error("read first 512 bytes to detect mime type failed, error: %v", logger.Args(err))
 			http.Error(rw, "500 Server Internal Error", http.StatusInternalServerError)
 			return
@@ -62,9 +64,17 @@ func (s *S3Proxy) Routers(router *chi.Mux) {
 		ft := http.DetectContentType(header)
 		group := s.ResolveMimeTypeGroup(ft)
 		if group == nil {
-			http.Error(rw, "415 Unsupported Media Type", http.StatusUnsupportedMediaType)
-			return
+			// Try resolve mime type by fileHeader.Filename
+			fallbackFileExt := filepath.Ext(fileHeader.Filename)
+			ft =  mime.TypeByExtension(fallbackFileExt)
+			group = s.ResolveMimeTypeGroup(ft)
+			if group == nil {
+				http.Error(rw, "415 Unsupported Media Type", http.StatusUnsupportedMediaType)
+				return
+			}
 		}
+		//
+		var extension string
 		exts, err := mime.ExtensionsByType(ft)
 		if err != nil {
 			log.Error("upload failed, error: %v", logger.Args(err))
@@ -72,12 +82,19 @@ func (s *S3Proxy) Routers(router *chi.Mux) {
 			return
 		}
 		if len(exts) == 0 {
-			log.Error("not found extension for %v mime/type", logger.Args(ft))
-			http.Error(rw, "422 Unprocessable Entity", http.StatusUnprocessableEntity)
-			return
+			// Try get extension from fileHeader.Filename
+			fallbackFileExt := filepath.Ext(fileHeader.Filename)
+			if fallbackFileExt == "" {
+				log.Error("not found extension for %v mime/type", logger.Args(ft))
+				http.Error(rw, "422 Unprocessable Entity", http.StatusUnprocessableEntity)
+				return
+			}
+			extension = fallbackFileExt
+		} else {
+			extension = exts[0]
 		}
 		limFile := http.MaxBytesReader(rw, file, int64(group.MaxUploadSize))
-		fileName := id.String() + exts[0]
+		fileName := id.String() + extension
 		keyS3Path := group.Folder + "/" + fileName
 		// Start uploading
 		if _, err := s.storage.Upload(s.ctx, keyS3Path, limFile); err != nil {
