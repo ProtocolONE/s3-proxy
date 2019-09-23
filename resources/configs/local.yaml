@@ -33,6 +33,7 @@ proxy:
         - image/gif
         - image/svg+xml
         - image/webp
+        - image/vnd.microsoft.icon
       maxUploadSize: 5 mib
       folder: /image
 s3:
