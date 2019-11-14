@@ -60,6 +60,9 @@ build: init ## build application
     fi;
 .PHONY: build
 
+build-jenkins: build ## build with jenkins
+.PHONY: build-jenkins
+
 clean: ## remove generated files, tidy vendor dependencies
 	if [ "${DIND}" = "1" ]; then \
 		$(call go_docker,"make clean") ;\
@@ -115,6 +118,9 @@ docker-image: ## build docker image
 	. ${ROOT_DIR}/scripts/common.sh ${ROOT_DIR}/scripts ;\
 	docker build --cache-from $${DOCKER_IMAGE}:${CACHE_TAG} -f "${ROOT_DIR}/docker/app/Dockerfile" -t $${DOCKER_IMAGE}:${TAG} ${ROOT_DIR}
 .PHONY: docker-image
+
+docker-image-jenkins: docker-image ## build docker image with jenkins
+.PHONY: docker-image-jenkins
 
 docker-push: ## push docker image to registry
 	. ${ROOT_DIR}/scripts/common.sh ${ROOT_DIR}/scripts ;\
